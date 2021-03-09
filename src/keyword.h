@@ -102,13 +102,4 @@ public:
 
 /* A statically allocated empty string.  */
 extern char empty_string[1];
-
-#ifdef __OPTIMIZE__
-
-#define INLINE inline
-#include "keyword.icc"
-#undef INLINE
-
-#endif
-
 #endif

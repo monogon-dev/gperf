@@ -72,12 +72,4 @@ extern KeywordExt_List * mergesort_list (KeywordExt_List *list,
                                          bool (*less) (KeywordExt *keyword1,
                                                        KeywordExt *keyword2));
 
-#ifdef __OPTIMIZE__
-
-#define INLINE inline
-#include "keyword-list.icc"
-#undef INLINE
-
-#endif
-
 #endif

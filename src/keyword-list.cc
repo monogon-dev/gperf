@@ -31,12 +31,39 @@ Keyword_List::Keyword_List (Keyword *car)
 {
 }
 
+Keyword *
+Keyword_List::first () const
+{
+  return _car;
+}
+
+/* Access to next element of list.  */
+Keyword_List *&
+Keyword_List::rest ()
+{
+  return _cdr;
+}
+
 /* ------------------------- KeywordExt_List class ------------------------- */
 
 /* Constructor.  */
 KeywordExt_List::KeywordExt_List (KeywordExt *car)
   : Keyword_List (car)
 {
+}
+
+/* Access to first element of list.  */
+KeywordExt *
+KeywordExt_List::first () const
+{
+  return static_cast<KeywordExt*>(_car);
+}
+
+/* Access to next element of list.  */
+KeywordExt_List *&
+KeywordExt_List::rest ()
+{
+  return *reinterpret_cast<KeywordExt_List**>(&_cdr);
 }
 
 /* ------------------------ Keyword_List functions ------------------------- */
@@ -162,12 +189,3 @@ mergesort_list (KeywordExt_List *list,
       (mergesort_list (static_cast<Keyword_List *> (list),
                        reinterpret_cast<Keyword_Comparison> (less)));
 }
-
-
-#ifndef __OPTIMIZE__
-
-#define INLINE /* not inline */
-#include "keyword-list.icc"
-#undef INLINE
-
-#endif /* not defined __OPTIMIZE__ */

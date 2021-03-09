@@ -27,7 +27,25 @@
 #include "positions.h"
 
 
+/* ----------------------------- Keyword class ----------------------------- */
+
+/* Constructor.  */
+Keyword::Keyword (const char *allchars, int allchars_length,
+                  const char *rest, unsigned int lineno)
+  : _allchars (allchars), _allchars_length (allchars_length),
+    _rest (rest), _lineno (lineno)
+{
+}
+
 /* --------------------------- KeywordExt class --------------------------- */
+
+/* Constructor.  */
+KeywordExt::KeywordExt (const char *allchars, int allchars_length,
+                        const char *rest, unsigned int lineno)
+  : Keyword (allchars, allchars_length, rest, lineno),
+    _final_index (-1)
+{
+}
 
 /* Sort a small set of 'unsigned int', base[0..len-1], in place.  */
 static inline void sort_char_set (unsigned int *base, int len)
@@ -148,12 +166,3 @@ Keyword_Factory::~Keyword_Factory ()
 /* ------------------------------------------------------------------------- */
 
 char empty_string[1] = "";
-
-
-#ifndef __OPTIMIZE__
-
-#define INLINE /* not inline */
-#include "keyword.icc"
-#undef INLINE
-
-#endif /* not defined __OPTIMIZE__ */

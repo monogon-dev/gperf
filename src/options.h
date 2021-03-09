@@ -292,12 +292,4 @@ private:
 /* Global option coordinator for the entire program.  */
 extern Options option;
 
-#ifdef __OPTIMIZE__
-
-#define INLINE inline
-#include "options.icc"
-#undef INLINE
-
-#endif
-
 #endif

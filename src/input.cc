@@ -26,7 +26,7 @@
 #include <string.h> /* declares strncpy(), strchr() */
 #include <limits.h> /* defines UCHAR_MAX etc. */
 #include "options.h"
-#include "getline.h"
+#include "lib/getline.h"
 
 Input::Input (FILE *stream, Keyword_Factory *keyword_factory)
   : _stream (stream), _factory (keyword_factory)

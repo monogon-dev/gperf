@@ -27,6 +27,246 @@
 
 /* ---------------------------- Class Positions ---------------------------- */
 
+/* Constructors.  */
+Positions::Positions ()
+  : _useall (false),
+    _size (0)
+{
+}
+
+Positions::Positions (int pos1)
+  : _useall (false),
+    _size (1)
+{
+  _positions[0] = pos1;
+}
+
+Positions::Positions (int pos1, int pos2)
+  : _useall (false),
+    _size (2)
+{
+  _positions[0] = pos1;
+  _positions[1] = pos2;
+}
+
+/* Copy constructor.  */
+Positions::Positions (const Positions& src)
+  : _useall (src._useall),
+    _size (src._size)
+{
+  memcpy (_positions, src._positions, _size * sizeof (_positions[0]));
+}
+
+/* Assignment operator.  */
+Positions&
+Positions::operator= (const Positions& src)
+{
+  _useall = src._useall;
+  _size = src._size;
+  memcpy (_positions, src._positions, _size * sizeof (_positions[0]));
+  return *this;
+}
+
+/* Accessors.  */
+bool
+Positions::is_useall () const
+{
+  return _useall;
+}
+
+int
+Positions::operator[] (unsigned int index) const
+{
+  return _positions[index];
+}
+
+unsigned int
+Positions::get_size () const
+{
+  return _size;
+}
+
+/* Write access.  */
+void
+Positions::set_useall (bool useall)
+{
+  _useall = useall;
+  if (useall)
+    {
+      /* The positions are 0, 1, ..., MAX_KEY_POS-1, in descending order.  */
+      _size = MAX_KEY_POS;
+      int *ptr = _positions;
+      for (int i = MAX_KEY_POS - 1; i >= 0; i--)
+        *ptr++ = i;
+    }
+}
+
+int *
+Positions::pointer ()
+{
+  return _positions;
+}
+
+void
+Positions::set_size (unsigned int size)
+{
+  _size = size;
+}
+
+/* Sorts the array in reverse order.
+   Returns true if there are no duplicates, false otherwise.  */
+bool
+Positions::sort ()
+{
+  if (_useall)
+    return true;
+
+  /* Bubble sort.  */
+  bool duplicate_free = true;
+  int *base = _positions;
+  unsigned int len = _size;
+
+  for (unsigned int i = 1; i < len; i++)
+    {
+      unsigned int j;
+      int tmp;
+
+      for (j = i, tmp = base[j]; j > 0 && tmp >= base[j - 1]; j--)
+        if ((base[j] = base[j - 1]) == tmp) /* oh no, a duplicate!!! */
+          duplicate_free = false;
+
+      base[j] = tmp;
+    }
+
+  return duplicate_free;
+}
+
+/* Creates an iterator, returning the positions in descending order.  */
+PositionIterator
+Positions::iterator () const
+{
+  return PositionIterator (*this);
+}
+
+/* Creates an iterator, returning the positions in descending order,
+   that apply to strings of length <= maxlen.  */
+PositionIterator
+Positions::iterator (int maxlen) const
+{
+  return PositionIterator (*this, maxlen);
+}
+
+/* Initializes an iterator through POSITIONS.  */
+PositionIterator::PositionIterator (Positions const& positions)
+  : _set (positions),
+    _index (0)
+{
+}
+
+/* Initializes an iterator through POSITIONS, ignoring positions >= maxlen.  */
+PositionIterator::PositionIterator (Positions const& positions, int maxlen)
+  : _set (positions)
+{
+  if (positions._useall)
+    _index = (maxlen <= Positions::MAX_KEY_POS ? Positions::MAX_KEY_POS - maxlen : 0);
+  else
+    {
+      unsigned int index;
+      for (index = 0;
+           index < positions._size && positions._positions[index] >= maxlen;
+           index++)
+        ;
+      _index = index;
+    }
+}
+
+/* Retrieves the next position, or EOS past the end.  */
+int
+PositionIterator::next ()
+{
+  return (_index < _set._size ? _set._positions[_index++] : EOS);
+}
+
+/* Returns the number of remaining positions, i.e. how often next() will
+   return a value != EOS.  */
+unsigned int
+PositionIterator::remaining () const
+{
+  return _set._size - _index;
+}
+
+/* Copy constructor.  */
+PositionIterator::PositionIterator (const PositionIterator& src)
+  : _set (src._set),
+    _index (src._index)
+{
+}
+
+/* Initializes an iterator through POSITIONS.  */
+PositionReverseIterator::PositionReverseIterator (Positions const& positions)
+  : _set (positions),
+    _index (_set._size),
+    _minindex (0)
+{
+}
+
+/* Initializes an iterator through POSITIONS, ignoring positions >= maxlen.  */
+PositionReverseIterator::PositionReverseIterator (Positions const& positions, int maxlen)
+  : _set (positions),
+    _index (_set._size)
+{
+  if (positions._useall)
+    _minindex = (maxlen <= Positions::MAX_KEY_POS ? Positions::MAX_KEY_POS - maxlen : 0);
+  else
+    {
+      unsigned int index;
+      for (index = 0;
+           index < positions._size && positions._positions[index] >= maxlen;
+           index++)
+        ;
+      _minindex = index;
+    }
+}
+
+/* Retrieves the next position, or EOS past the end.  */
+int
+PositionReverseIterator::next ()
+{
+  return (_index > _minindex ? _set._positions[--_index] : EOS);
+}
+
+/* Returns the number of remaining positions, i.e. how often next() will
+   return a value != EOS.  */
+unsigned int
+PositionReverseIterator::remaining () const
+{
+  return _index - _minindex;
+}
+
+/* Copy constructor.  */
+PositionReverseIterator::PositionReverseIterator (const PositionReverseIterator& src)
+  : _set (src._set),
+    _index (src._index),
+    _minindex (src._minindex)
+{
+}
+
+
+/* Creates an iterator, returning the positions in ascending order.  */
+PositionReverseIterator
+Positions::reviterator () const
+{
+  return PositionReverseIterator (*this);
+}
+
+/* Creates an iterator, returning the positions in ascending order,
+   that apply to strings of length <= maxlen.  */
+PositionReverseIterator
+Positions::reviterator (int maxlen) const
+{
+  return PositionReverseIterator (*this, maxlen);
+}
+
 /* Set operations.  Assumes the array is in reverse order.  */
 
 bool
@@ -163,13 +403,3 @@ Positions::print () const
         }
     }
 }
-
-/* ------------------------------------------------------------------------- */
-
-#ifndef __OPTIMIZE__
-
-#define INLINE /* not inline */
-#include "positions.icc"
-#undef INLINE
-
-#endif /* not defined __OPTIMIZE__ */

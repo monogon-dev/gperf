@@ -23,7 +23,7 @@
 
 #include <stdio.h>
 #include <string.h> /* declares memset(), strcmp() */
-#include <hash.h>
+#include "lib/hash.h"
 #include "options.h"
 
 /* We use a hash table with double hashing.  This is the simplest kind of

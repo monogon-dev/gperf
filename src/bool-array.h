@@ -63,15 +63,4 @@ private:
   unsigned int * const  _storage_array;
 };
 
-#ifdef __OPTIMIZE__  /* efficiency hack! */
-
-#include <stdio.h>
-#include <string.h>
-#include "options.h"
-#define INLINE inline
-#include "bool-array.icc"
-#undef INLINE
-
-#endif
-
 #endif

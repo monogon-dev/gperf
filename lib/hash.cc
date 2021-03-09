@@ -3,7 +3,7 @@ Copyright (C) 1990, 2000, 2002 Free Software Foundation
     written by Doug Lea <dl@rocky.oswego.edu>
 */
 
-#include <hash.h>
+#include "hash.h"
 
 /*
  Some useful hash function.

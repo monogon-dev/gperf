@@ -1083,12 +1083,142 @@ There is NO WARRANTY, to the extent permitted by law.\n\
     }
 }
 
-/* ------------------------------------------------------------------------- */
+/* Tests a given boolean option.  Returns true if set, false otherwise.  */
+bool
+Options::operator[] (Option_Type option) const
+{
+  return _option_word & option;
+}
 
-#ifndef __OPTIMIZE__
+/* Sets a given boolean option.  */
+void
+Options::set (Option_Type option)
+{
+  _option_word |= option;
+}
 
-#define INLINE /* not inline */
-#include "options.icc"
-#undef INLINE
+/* Returns the input file name.  */
+const char *
+Options::get_input_file_name () const
+{
+  return _input_file_name;
+}
 
-#endif /* not defined __OPTIMIZE__ */
+/* Returns the output file name.  */
+const char *
+Options::get_output_file_name () const
+{
+  return _output_file_name;
+}
+
+/* Returns the jump value.  */
+int
+Options::get_jump () const
+{
+  return _jump;
+}
+
+/* Returns the initial associated character value.  */
+int
+Options::get_initial_asso_value () const
+{
+  return _initial_asso_value;
+}
+
+/* Returns the number of iterations for finding finding good asso_values.  */
+int
+Options::get_asso_iterations () const
+{
+  return _asso_iterations;
+}
+
+/* Returns the total number of switch statements to generate.  */
+int
+Options::get_total_switches () const
+{
+  return _total_switches;
+}
+
+/* Returns the factor by which to multiply the generated table's size.  */
+float
+Options::get_size_multiple () const
+{
+  return _size_multiple;
+}
+
+/* Returns the generated function name.  */
+const char *
+Options::get_function_name () const
+{
+  return _function_name;
+}
+
+/* Returns the keyword key name.  */
+const char *
+Options::get_slot_name () const
+{
+  return _slot_name;
+}
+
+/* Returns the struct initializer suffix.  */
+const char *
+Options::get_initializer_suffix () const
+{
+  return _initializer_suffix;
+}
+
+/* Returns the generated class name.  */
+const char *
+Options::get_class_name () const
+{
+  return _class_name;
+}
+
+/* Returns the hash function name.  */
+const char *
+Options::get_hash_name () const
+{
+  return _hash_name;
+}
+
+/* Returns the hash table array name.  */
+const char *
+Options::get_wordlist_name () const
+{
+  return _wordlist_name;
+}
+
+/* Returns the length table array name.  */
+const char *
+Options::get_lengthtable_name () const
+{
+  return _lengthtable_name;
+}
+
+/* Returns the string pool name.  */
+const char *
+Options::get_stringpool_name () const
+{
+  return _stringpool_name;
+}
+
+/* Returns the prefix for the constants.  */
+const char *
+Options::get_constants_prefix () const
+{
+  return _constants_prefix;
+}
+
+/* Returns the string used to delimit keywords from other attributes.  */
+const char *
+Options::get_delimiters () const
+{
+  return _delimiters;
+}
+
+/* Returns key positions.  */
+const Positions&
+Options::get_key_positions () const
+{
+  return _key_positions;
+}

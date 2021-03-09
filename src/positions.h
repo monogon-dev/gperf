@@ -161,13 +161,4 @@ private:
   unsigned int          _minindex;
 };
 
-#ifdef __OPTIMIZE__
-
-#include <string.h>
-#define INLINE inline
-#include "positions.icc"
-#undef INLINE
-
-#endif
-
 #endif
